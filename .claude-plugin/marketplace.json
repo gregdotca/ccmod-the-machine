@@ -1,0 +1,6 @@
+{
+  "name": "ccmod-the-machine",
+  "description": "The Machine, a Person of Interest restyle for Claude Code",
+  "owner": { "name": "Greg Chetcuti" },
+  "plugins": [{ "name": "the-machine", "source": "./" }]
+}

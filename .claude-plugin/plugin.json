@@ -1,0 +1,1 @@
+{ "name": "the-machine", "version": "1.0.0", "description": "Restyle Claude Code as The Machine from Person of Interest", "author": { "name": "Greg Chetcuti" }, "types": "./types/index.d.ts" }

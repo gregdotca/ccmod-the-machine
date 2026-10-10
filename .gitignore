@@ -1,0 +1,9 @@
+# Type files Claude Code writes into the mod while it's loaded
+/.claude-plugin/types/
+/tsconfig.json
+
+# Editor and OS files
+.DS_Store
+*.swp
+.idea/
+.vscode/
