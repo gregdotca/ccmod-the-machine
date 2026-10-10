@@ -2,6 +2,10 @@
 
 All notable changes to the-machine.
 
+## the-machine 1.0.1 (2026-10-10)
+
+- Added: a display name, homepage, repository, and license to the plugin manifest, ready for Anthropic's plugin directory
+
 ## the-machine 1.0.0 (2026-10-10)
 
 First public release.
