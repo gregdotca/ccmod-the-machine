@@ -73,6 +73,10 @@ To try a change without installing it, start a session with the mod loaded from 
 claude --plugin-dir .
 ```
 
+## Privacy
+
+The mod keeps no personal data and makes no network requests. [`PRIVACY.md`](PRIVACY.md) lists what it reads and the two settings it stores.
+
 ## License
 
 [MIT](LICENSE)

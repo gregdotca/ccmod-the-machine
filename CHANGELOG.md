@@ -2,6 +2,11 @@
 
 All notable changes to the-machine.
 
+## the-machine 1.0.2 (2026-10-10)
+
+- Added: a privacy policy, `PRIVACY.md`, linked from the plugin manifest and the README
+- Added: a plugin icon for Anthropic's plugin directory
+
 ## the-machine 1.0.1 (2026-10-10)
 
 - Added: a display name, homepage, repository, and license to the plugin manifest, ready for Anthropic's plugin directory
