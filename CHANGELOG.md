@@ -2,6 +2,10 @@
 
 All notable changes to the-machine.
 
+## the-machine 1.0.4 (2026-10-11)
+
+- Fixed: the boot log no longer disappears partway through the boot when the session and weekly usage figures arrive in a terminal with just enough rows for it. The boot screen now keeps room for those two threat rows from the start
+
 ## the-machine 1.0.3 (2026-10-11)
 
 - Changed: the boot screen has a blank row between the boot log and the load bar, so the `BOOT SEQUENCE COMPLETE` line stands apart. The row is dropped when the terminal is one row short, so the boot log still shows

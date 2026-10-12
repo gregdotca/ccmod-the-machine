@@ -71,8 +71,9 @@ test('the boot log keeps a gap above the complete line when there is room', asyn
   await $.session.start(START)
   await clock.advance(12200)
 
-  // With the binary and one threat row, the log needs 17 rows and its gap
-  // one more. Once booted, the gap is the only row that is a lone space.
+  // With the binary and room for two threat rows, the log needs 18 rows and
+  // its gap one more. Once booted, the gap is the only row that is a lone
+  // space.
   const layout = async (maxRows: number) => {
     const band = await $.ui.mount({ plugin: 'the-machine', surface: 'terminal', ...BAND, props: { ...BAND.props, maxRows } })
     const hasLog = (await band.find({ type: 'Text', text: /REINSTANTIATING/ })) !== undefined
@@ -82,7 +83,43 @@ test('the boot log keeps a gap above the complete line when there is room', asyn
     return { hasLog, hasGap, hasComplete }
   }
 
-  expect(await layout(18)).toEqual({ hasLog: true, hasGap: true, hasComplete: true })
-  expect(await layout(17)).toEqual({ hasLog: true, hasGap: false, hasComplete: true })
-  expect(await layout(16)).toEqual({ hasLog: false, hasGap: false, hasComplete: true })
+  expect(await layout(19)).toEqual({ hasLog: true, hasGap: true, hasComplete: true })
+  expect(await layout(18)).toEqual({ hasLog: true, hasGap: false, hasComplete: true })
+  expect(await layout(17)).toEqual({ hasLog: false, hasGap: false, hasComplete: true })
+})
+
+test('usage readings arriving mid-boot leave the boot log in place', async ($, on) => {
+  const clock = mock.clock(on)
+  mock.store(on)
+  on('session.start', ($, e) => ({ cwd: e.cwd }))
+  on('command.register', ($, e) => ({ value: { command: e.name } }) as never)
+  on('session.usage', () => ({ value: { startedAt: 0, context: {}, rateLimits: [] } }) as never)
+  on('session.measure', ($, e) => ({ changed: e.changed }))
+
+  await $.session.start(START)
+  await clock.advance(2200)
+
+  const hasLog = async (maxRows: number) => {
+    const band = await $.ui.mount({ plugin: 'the-machine', surface: 'terminal', ...BAND, props: { ...BAND.props, maxRows } })
+    const found = (await band.find({ type: 'Text', text: /REINSTANTIATING/ })) !== undefined
+    await band.unmount()
+    return found
+  }
+
+  expect([await hasLog(18), await hasLog(17)]).toEqual([true, false])
+
+  await $.session.measure({
+    context: { window: 200000 },
+    rateLimits: [
+      { kind: 'five_hour', percentUsed: 10, resetsAt: '2026-10-09T14:15:00Z' },
+      { kind: 'seven_day', percentUsed: 20, resetsAt: '2026-10-12T15:00:00Z' },
+    ],
+    changed: ['rateLimits'],
+  } as never)
+
+  const band = await $.ui.mount({ plugin: 'the-machine', surface: 'terminal', ...BAND, props: { ...BAND.props, maxRows: 18 } })
+  expect(await band.find({ type: 'Text', text: /WEEKLY/ })).toBeDefined()
+  expect(await band.find({ type: 'Text', text: /REINSTANTIATING/ })).toBeDefined()
+  await band.unmount()
+  expect(await hasLog(17)).toBe(false)
 })

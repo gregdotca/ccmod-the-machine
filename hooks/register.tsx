@@ -638,7 +638,9 @@ export const register: Register = on => {
     if (isBooting) {
       const frame = await read($, bootFrame)
       const hasBinaryRoom = e.props.bodyColumns >= BINARY[0]!.length + 4
-      const threatCount = Math.max(1, readings.length)
+      // Room is kept for two threat rows, so a second reading arriving
+      // mid-boot doesn't push the log out and make the prompt jump.
+      const threatCount = Math.max(2, readings.length)
       // The screen: the border, the binary and its gap, the log and its gap,
       // the load bar (the complete line once done), a gap, the question, a
       // gap and the status rows. Without room for them, the log's gap goes
