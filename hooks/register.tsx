@@ -639,12 +639,14 @@ export const register: Register = on => {
       const frame = await read($, bootFrame)
       const hasBinaryRoom = e.props.bodyColumns >= BINARY[0]!.length + 4
       const threatCount = Math.max(1, readings.length)
-      // The screen: the border, the binary and its gap, the log, the load
-      // bar (the complete line once done), a gap, the question, a gap and
-      // the status rows. Without room for them, the binary or the log and
-      // bar are left out.
+      // The screen: the border, the binary and its gap, the log and its gap,
+      // the load bar (the complete line once done), a gap, the question, a
+      // gap and the status rows. Without room for them, the log's gap goes
+      // first, then the binary or the log and bar are left out.
       const binaryRows = hasBinaryRoom ? BINARY.length + 1 : 0
-      const hasLogRoom = e.props.maxRows >= 2 + binaryRows + BOOT_LOG.length + 1 + 2 + 2 + threatCount
+      const logRoom = e.props.maxRows - (2 + binaryRows + BOOT_LOG.length + 1 + 2 + 2 + threatCount)
+      const hasLogRoom = logRoom >= 0
+      const hasLogGapRoom = logRoom >= 1
       // Rows not drawn yet are blank, so the band keeps its height and the
       // prompt doesn't jump while the screen boots.
       const blank = (key: string) => <Text key={key}> </Text>
@@ -700,6 +702,7 @@ export const register: Register = on => {
             </Box>
           ) : undefined}
           {hasLogRoom ? logRows : undefined}
+          {hasLogGapRoom ? blank('log-gap') : undefined}
           {hasLogRoom && frame < COMPLETE_AT ? (
             loadRow
           ) : frame >= COMPLETE_AT ? (

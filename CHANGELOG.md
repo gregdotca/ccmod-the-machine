@@ -2,6 +2,10 @@
 
 All notable changes to the-machine.
 
+## the-machine 1.0.3 (2026-10-11)
+
+- Changed: the boot screen has a blank row between the boot log and the load bar, so the `BOOT SEQUENCE COMPLETE` line stands apart. The row is dropped when the terminal is one row short, so the boot log still shows
+
 ## the-machine 1.0.2 (2026-10-10)
 
 - Added: a privacy policy, `PRIVACY.md`, linked from the plugin manifest and the README

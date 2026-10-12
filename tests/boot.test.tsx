@@ -60,3 +60,29 @@ test('an interactive start animates the boot screen, then asks', async ($, on) =
   expect(await narrow.find({ type: 'Text', text: /FEED \d{4}/ })).toBeUndefined()
   await narrow.unmount()
 })
+
+test('the boot log keeps a gap above the complete line when there is room', async ($, on) => {
+  const clock = mock.clock(on)
+  mock.store(on)
+  on('session.start', ($, e) => ({ cwd: e.cwd }))
+  on('command.register', ($, e) => ({ value: { command: e.name } }) as never)
+  on('session.usage', () => ({ value: { startedAt: 0, context: {}, rateLimits: [] } }) as never)
+
+  await $.session.start(START)
+  await clock.advance(12200)
+
+  // With the binary and one threat row, the log needs 17 rows and its gap
+  // one more. Once booted, the gap is the only row that is a lone space.
+  const layout = async (maxRows: number) => {
+    const band = await $.ui.mount({ plugin: 'the-machine', surface: 'terminal', ...BAND, props: { ...BAND.props, maxRows } })
+    const hasLog = (await band.find({ type: 'Text', text: /REINSTANTIATING/ })) !== undefined
+    const hasGap = (await band.find({ type: 'Text', text: /^ $/ })) !== undefined
+    const hasComplete = (await band.find({ type: 'Text', text: /BOOT SEQUENCE COMPLETE/ })) !== undefined
+    await band.unmount()
+    return { hasLog, hasGap, hasComplete }
+  }
+
+  expect(await layout(18)).toEqual({ hasLog: true, hasGap: true, hasComplete: true })
+  expect(await layout(17)).toEqual({ hasLog: true, hasGap: false, hasComplete: true })
+  expect(await layout(16)).toEqual({ hasLog: false, hasGap: false, hasComplete: true })
+})
