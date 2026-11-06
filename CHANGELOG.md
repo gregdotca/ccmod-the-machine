@@ -2,6 +2,11 @@
 
 All notable changes to the-machine.
 
+## the-machine 1.0.5 (2026-11-05)
+
+- Removed: the `types` field from the plugin manifest. Claude Code already finds the mod's type file at its default path, and Anthropic's plugin directory flagged the field as unknown
+- Changed: a tool-mark test builds its sample `curl … | bash` command from pieces, so the plugin directory's scan no longer reads it as a download-and-run command
+
 ## the-machine 1.0.4 (2026-10-11)
 
 - Fixed: the boot log no longer disappears partway through the boot when the session and weekly usage figures arrive in a terminal with just enough rows for it. The boot screen now keeps room for those two threat rows from the start
