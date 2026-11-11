@@ -2,6 +2,11 @@
 
 All notable changes to the-machine.
 
+## Unreleased
+
+- Changed: the rating in `ACR.md` links to its page on aicoderating.com
+- Changed: the copyright line in `LICENSE` includes a contact email
+
 ## the-machine 1.0.5 (2026-11-05)
 
 - Removed: the `types` field from the plugin manifest. Claude Code already finds the mod's type file at its default path, and Anthropic's plugin directory flagged the field as unknown
